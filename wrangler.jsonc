@@ -1,0 +1,40 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "adjustment",
+  "main": "./dist/index.js",
+  "compatibility_date": "2025-08-27",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+  },
+  "vars": {
+    "MY_VAR": "my-variable",
+  },
+  // "kv_namespaces": [
+  //   {
+  //     "binding": "MY_KV_NAMESPACE",
+  //     "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  //   }
+  // ],
+  // "r2_buckets": [
+  //   {
+  //     "binding": "MY_BUCKET",
+  //     "bucket_name": "my-bucket"
+  //   }
+  // ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "adjustment-db",
+      "database_id": "fc270d9f-dfcb-4c38-bd59-b69c03bacc28",
+    },
+    {
+      "binding": "adjustment_db",
+      "database_name": "adjustment-db",
+      "database_id": "fc270d9f-dfcb-4c38-bd59-b69c03bacc28",
+    },
+  ],
+  // "ai": {
+  //   "binding": "AI"
+  // }
+}
