@@ -21,71 +21,92 @@ export default function AdjustmentForm(props: Props) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={onClose}>
-      <div className="bg-white rounded-lg shadow-xl p-6 md:p-8 w-full max-w-2xl mx-4" onClick={(e) => e.stopPropagation()}>
-        <form method="post">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">出欠を入力・編集する</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label htmlFor="nickname" className="block text-sm font-medium text-gray-700 mb-1">ニックネーム (必須)</label>
-              <input
-                type="text"
-                id="nickname"
-                name="nickname"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
-                value={nickname}
-                onInput={(e) => setNickname(e.currentTarget.value)}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-1">氏名 (任意)</label>
-              <input
-                type="text"
-                id="full_name"
-                name="full_name"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
-                value={fullName}
-                onInput={(e) => setFullName(e.currentTarget.value)}
-              />
-            </div>
+    <div className="modal modal-open modal-bottom sm:modal-middle" role="dialog">
+      <div className="modal-box relative">
+        <button
+          type="button"
+          onClick={onClose}
+          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+        >
+          ✕
+        </button>
+        <form method="post" className="space-y-6">
+          <h2 className="text-2xl font-bold">出欠を入力・編集する</h2>
+
+          <div className="form-control">
+            <label htmlFor="nickname" className="label">
+              <span className="label-text">ニックネーム (必須)</span>
+            </label>
+            <input
+              type="text"
+              id="nickname"
+              name="nickname"
+              className="input input-bordered w-full"
+              value={nickname}
+              onInput={(e) => setNickname(e.currentTarget.value)}
+              required
+            />
           </div>
 
-          <div className="mb-6">
-            <p className="block text-sm font-medium text-gray-700 mb-2">各日程の参加可否を選択してください:</p>
-            <div className="space-y-4">
+          <div className="form-control">
+            <label htmlFor="full_name" className="label">
+              <span className="label-text">氏名 (任意)</span>
+            </label>
+            <input
+              type="text"
+              id="full_name"
+              name="full_name"
+              className="input input-bordered w-full"
+              value={fullName}
+              onInput={(e) => setFullName(e.currentTarget.value)}
+            />
+          </div>
+
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">各日程の参加可否を選択してください:</span>
+            </label>
+            <div className="space-y-2">
               {eventDates.map((date) => (
-                <div key={date} className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
-                  <span className="font-medium text-gray-800">{date}</span>
-                  <div className="flex items-center space-x-4">
-                    <label className="flex items-center space-x-2 cursor-pointer">
-                      <input type="radio" name={`availability_${date}`} value="◯" defaultChecked={getInitialStatus(date) === '◯'} required className="radio radio-success" />
-                      <span className="text-lg font-bold text-green-600">◯</span>
-                    </label>
-                    <label className="flex items-center space-x-2 cursor-pointer">
-                      <input type="radio" name={`availability_${date}`} value="△" defaultChecked={getInitialStatus(date) === '△'} className="radio radio-warning" />
-                      <span className="text-lg font-bold text-yellow-500">△</span>
-                    </label>
-                    <label className="flex items-center space-x-2 cursor-pointer">
-                      <input type="radio" name={`availability_${date}`} value="✖️" defaultChecked={getInitialStatus(date) === '✖️'} className="radio radio-error" />
-                      <span className="text-lg font-bold text-red-500">✖️</span>
-                    </label>
+                <div key={date} className="grid grid-cols-2 items-center gap-4 p-2 rounded-lg bg-base-200">
+                  <span className="font-medium">{date}</span>
+                  <div className="flex justify-end space-x-2">
+                    {[
+                      { value: '◯', label: '◯', className: 'radio-success' },
+                      { value: '△', label: '△', className: 'radio-warning' },
+                      { value: '✖️', label: '✖️', className: 'radio-error' },
+                    ].map(({ value, label, className }) => (
+                      <label key={value} className="label cursor-pointer">
+                        <input
+                          type="radio"
+                          name={`availability_${date}`}
+                          value={value}
+                          defaultChecked={getInitialStatus(date) === value}
+                          required={value === '◯'}
+                          className={`radio ${className}`}
+                        />
+                        <span className="label-text pl-2 text-lg font-bold">{label}</span>
+                      </label>
+                    ))}
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="flex justify-end space-x-4">
-            <button type="button" onClick={onClose} className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+          <div className="modal-action">
+            <button type="button" onClick={onClose} className="btn">
               キャンセル
             </button>
-            <button type="submit" className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            <button type="submit" className="btn btn-primary">
               登録・更新する
             </button>
           </div>
         </form>
       </div>
+      <form method="dialog" className="modal-backdrop">
+        <button type="button" onClick={onClose}>close</button>
+      </form>
     </div>
   )
 }

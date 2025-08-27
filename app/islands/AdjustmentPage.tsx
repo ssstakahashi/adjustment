@@ -30,64 +30,70 @@ export default function AdjustmentPage(props: Props) {
   const { eventDates, allUsers, availabilitiesByDate, currentUser, currentUserAvailabilities } = props
   const [showModal, setShowModal] = useState(false)
 
-  const getStatusClass = (status: string) => {
-    if (status === '◯') return 'text-green-600'
-    if (status === '△') return 'text-yellow-500'
-    if (status === '✖️') return 'text-red-500'
-    return 'text-gray-400'
+  const getStatusInfo = (status: string) => {
+    if (status === '◯') return { text: '◯', className: 'text-success' }
+    if (status === '△') return { text: '△', className: 'text-warning' }
+    if (status === '✖️') return { text: '✖️', className: 'text-error' }
+    return { text: '-', className: 'text-base-content' }
   }
 
   return (
-    <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
-        <div className="mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">卒業祝いキックオフ</h2>
-          <p className="mt-2 text-gray-600">最高の門出にしよう！ご参加お待ちしております。</p>
-        </div>
+    <main className="p-4 sm:p-6 md:p-8">
+      <div className="card bg-base-100 shadow-xl">
+        <div className="card-body">
+          <div className="mb-6">
+            <h2 className="card-title text-3xl">卒業祝いキックオフ</h2>
+            <p className="mt-2">最高の門出にしよう！ご参加お待ちしております。</p>
+          </div>
 
-        <div>
-          <h3 className="text-lg font-bold text-gray-800 border-l-4 border-green-500 pl-3 mb-4">日程候補</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-green-50">
-                <tr>
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">日程</th>
-                  <th scope="col" className="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">◯</th>
-                  <th scope="col" className="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">△</th>
-                  <th scope="col" className="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">✖️</th>
-                  {allUsers.map(user => (
-                    <th key={user.id} scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{user.nickname}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {eventDates.map((date, index) => (
-                  <tr key={date} className={index % 2 === 0 ? '' : 'bg-gray-50'}>
-                    <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{date.replace(' ', '\n')}</td>
-                    <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{availabilitiesByDate[date].summary.yes}人</td>
-                    <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{availabilitiesByDate[date].summary.maybe}人</td>
-                    <td className="px-2 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{availabilitiesByDate[date].summary.no}人</td>
+          <div>
+            <h3 className="text-xl font-bold border-l-4 border-primary pl-3 mb-4">日程候補</h3>
+            <div className="overflow-x-auto">
+              <table className="table table-zebra w-full">
+                <thead>
+                  <tr>
+                    <th>日程</th>
+                    <th className="text-center">◯</th>
+                    <th className="text-center">△</th>
+                    <th className="text-center">✖️</th>
                     {allUsers.map(user => (
-                      <td key={user.id} className="px-4 py-4 whitespace-nowrap text-lg font-bold text-center">
-                        <span className={getStatusClass(availabilitiesByDate[date].status[user.id])}>
-                          {availabilitiesByDate[date].status[user.id] || '-'}
-                        </span>
-                      </td>
+                      <th key={user.id}>{user.nickname}</th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {eventDates.map((date) => (
+                    <tr key={date}>
+                      <td className="font-medium">{date}</td>
+                      <td className="text-center">{availabilitiesByDate[date].summary.yes}人</td>
+                      <td className="text-center">{availabilitiesByDate[date].summary.maybe}人</td>
+                      <td className="text-center">{availabilitiesByDate[date].summary.no}人</td>
+                      {allUsers.map(user => {
+                        const statusInfo = getStatusInfo(availabilitiesByDate[date].status[user.id])
+                        return (
+                          <td key={user.id} className="text-center text-lg font-bold">
+                            <span className={statusInfo.className}>
+                              {statusInfo.text}
+                            </span>
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-12 flex justify-center">
+      <div className="fixed bottom-6 right-6">
         <button
           onClick={() => setShowModal(true)}
-          className="w-40 h-40 md:w-48 md:h-48 bg-green-500 text-white text-xl font-bold rounded-full shadow-2xl hover:bg-green-600 focus:outline-none focus:ring-4 focus:ring-green-300 transition-transform duration-200 ease-in-out hover:scale-105 active:scale-95 flex items-center justify-center text-center leading-tight"
+          className="btn btn-primary btn-lg shadow-lg"
         >
-          出欠を<br />入力する
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+          {currentUser ? '予定を編集' : '予定を入力'}
         </button>
       </div>
 
