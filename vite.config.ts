@@ -7,8 +7,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [
     honox({
-      devServer: { adapter },
-      client: { input: ['./app/style.css'] }
+      devServer: { adapter }
     }),
     tailwindcss(),
     build()

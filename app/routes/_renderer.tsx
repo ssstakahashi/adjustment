@@ -1,4 +1,5 @@
-import { jsxRenderer } from 'honox/factory'
+import { jsxRenderer } from 'hono/jsx-renderer'
+import '../global.css'
 
 export default jsxRenderer(({ children, title }) => {
   return (
